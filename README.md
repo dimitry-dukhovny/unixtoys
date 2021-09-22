@@ -27,6 +27,10 @@ Password:  tai@seedeiPahch6
          six
 ```
 
+## skineffect.py
+This is messy stuff for some oil well skin effect arithmetic out of a friend's textbook.  If you are not that friend, you probably do not need this.
+All constants come from Karakas, M. and S. Tariq's "Semi-analytical production models for perforated completions" in 1988.
+
 ## splunkcheck.sh
 The hard-coded values are the result of my generating this script from a Jinja2 script template.  Feel free to modify those.
 Anything in *main()* can change without affecting the meat of the script.
