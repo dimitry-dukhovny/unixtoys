@@ -81,6 +81,27 @@ portpidcheck() {
   fi
 }
 
+splunklicensecheck() {
+  result=`${SPLUNKDIR}/bin/splunk search \
+   'index=_internal source="*license_usage.*" earliest=@d  | \
+   eval GB=round(b/1024/1024/1024,1) | \
+   eval LGB=round(poolsz/1024/1024/1024,1) | \
+   stats sum(GB) AS GB_Today values(LGB) AS Limit_GB by pool  | \
+   eval License_Percent_Usage=round(GB_Today/Limit_GB * 100,1)  | \
+   eval Violation_Risk = if((round((((tonumber(strftime(now(), "%H")) * 60) + \
+   tonumber(strftime(now(),"%M"))) / 1440)* 100,1)) \
+   < License_Percent_Usage, "Yes", "No")' | egrep 'Yes | No'`
+  licenserisks=`echo ${result} | grep -c "Yes"`
+  if [ ${licenserisks:-0} -ne 0 ]
+  then
+    err ${result}
+    echo ${licenserisks}
+  else
+    info ${result}
+    echo ${licenserisks}
+  fi
+}
+
 swapcheck() {
   # Checks percent of all swap available against a max in-use parameter
   swapmax=${1:-90}
@@ -128,14 +149,26 @@ main() {
   APPFAIL=`portpidcheck splunkd`
   DISKFAIL=`diskpercentcheck ${SPLUNKDIR} 80`
   SPLUNKFAIL=`statecheck ${SPLUNKDIR}/bin/splunk status`
+  SPLUNKLICFAIL=`splunklicensecheck`
   SWAPFAIL=`swapcheck 90`
   
-  [ ${MONGOFAIL} -gt 0 ] && err "MONGOFAIL ${MONGOFAIL}" || info "MONGOFAIL ${MONGOFAIL}"
-  [ ${APPFAIL} -gt 0 ] && err "APPFAIL ${APPFAIL}" || info "APPFAIL ${APPFAIL}"
-  [ ${DISKFAIL} -gt 0 ] && err "DISKFAIL ${DISKFAIL}" || info "DISKFAIL ${DISKFAIL}"
-  [ ${SPLUNKFAIL} -gt 0 ] && err "SPLUNKFAIL ${SPLUNKFAIL}" || info "SPLUNKFAIL ${SPLUNKFAIL}"
-  [ ${SWAPFAIL} -gt 0 ] && err "SWAPFAIL ${SWAPFAIL}" || info "SWAPFAIL ${SWAPFAIL}"
-  echo "FAILURE_REASONS $(( ${MONGOFAIL:-0} + ${APPFAIL} + ${DISKFAIL:-0} + ${SPLUNKFAIL:-0} + ${SWAPFAIL:-0} ))"
+  [ ${MONGOFAIL} -gt 0 ] && err "MONGOFAIL ${MONGOFAIL}" || \
+    info "MONGOFAIL ${MONGOFAIL}"
+  [ ${APPFAIL} -gt 0 ] && err "APPFAIL ${APPFAIL}" || \
+    info "APPFAIL ${APPFAIL}"
+  [ ${DISKFAIL} -gt 0 ] && err "DISKFAIL ${DISKFAIL}" || \
+    info "DISKFAIL ${DISKFAIL}"
+  [ ${SPLUNKFAIL} -gt 0 ] && err "SPLUNKFAIL ${SPLUNKFAIL}" || \
+    info "SPLUNKFAIL ${SPLUNKFAIL}"
+  [ ${SPLUNKLICFAIL} -gt 0 ] && err "SPLUNKLICFAIL ${SPLUNKLICFAIL}" || \
+    info "SPLUNKLICFAIL ${SPLUNKLICFAIL}"
+  [ ${SWAPFAIL} -gt 0 ] && err "SWAPFAIL ${SWAPFAIL}" || \
+    info "SWAPFAIL ${SWAPFAIL}"
+  echo "FAILURE_REASONS $(( ${MONGOFAIL:-0} + \
+    ${APPFAIL} + \
+    ${DISKFAIL:-0} + \
+    ${SPLUNKFAIL:-0} + \
+    ${SWAPFAIL:-0} ))"
 }
 
 [ ${#} -lt 1 ] && usage || main > ${logout} 2> ${logerr}
