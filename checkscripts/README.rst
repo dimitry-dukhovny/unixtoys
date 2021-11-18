@@ -1,7 +1,8 @@
 Check Scripts
 #############
-Created 20170607.1014Z
-Maintained in https://github.com/dimitry-dukhovny/unixtoys/
+
+* Created 20170607.1014Z
+* Maintained in https://github.com/dimitry-dukhovny/unixtoys/
 
 * You only need...
 
@@ -13,6 +14,9 @@ Maintained in https://github.com/dimitry-dukhovny/unixtoys/
 
   * check.domain.sh
   * check.apache.sh
+
+.. toctree::
+..
 
 check.functions.sh
 ==================
