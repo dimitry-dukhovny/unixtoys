@@ -3,6 +3,17 @@ Check Scripts
 Created 20170607.1014Z
 Maintained in https://github.com/dimitry-dukhovny/unixtoys/
 
+* You only need...
+
+  * check.functions.sh
+  * check.config.sh
+  * check.simplified.sh
+
+* You will probably want...
+
+  * check.domain.sh
+  * check.apache.sh
+
 check.functions.sh
 ==================
 
@@ -28,8 +39,59 @@ check.functions.sh
   logmyoutfile() # Dump outfile contents to the defined logfile
 ..
 
+check.config.sh
+===============
+
+* All purpose configuration file.
+
+* Use this for any environment overrides you want.
+
+check.simplified.sh
+===================
+
+* Summary tool for what the subordinate checks reveal.
+
+* Formatted so good things like Nagios and evil things like Solarwinds can harvest the output.
+
 check.apache.sh
 ===============
 
+* Checks Apache HTTPD for functionality.
+
 check.domain.sh
 ===============
+
+* Checks domain validity.
+
+* Checks cert state and provides a countdown timer with warnings.
+
+check.postfix.sh
+================
+
+* Checks the function of Postfix.
+
+check.reach.sh
+==============
+
+* Primitive transaction check for reachable sites.
+
+check.squid.sh
+==============
+
+* Checks Squid proxy for functionality.
+
+check.tomact_and_mail.sh
+========================
+
+* Checks Tomcat application server.
+
+* Checks Postfix.
+
+check.tunnels.sh
+================
+
+* Checks plain text ports.
+
+* Checks the stunnel wrapper around them.
+
+* Requires *very* fiddly configuration.
