@@ -165,3 +165,43 @@ cash flow array
 				V = valueCF(CF, k, n)
 	IRR=k
 	return IRR, (str(IRR*100)+"%")
+
+def perpetuity(A, r):
+  """
+  A = annual payment
+  r = discount rate
+  returns present value
+  """
+  return(A/r)
+  
+def growing_perpetuity(A, r, g, y=0):
+  """
+  A = initial annual payment
+  r = discount rate
+  g = growth rate
+  y = year number
+  returns present value
+  """
+  return((A / (1 + r)**y)/(r-g))
+
+def annuity(A, r, g, t):
+  """
+  A = annual payment
+  r = discount rate
+  t = time periods
+  returns present value
+  """
+  return((A/r) * (1 - 1/((1+r)**t)))
+
+def growing_annuity(A, r, g, t, y=0):
+  """
+  A = annual payment
+  r = discount rate
+  g = growth rate
+  t = time periods
+  returns present value
+  """
+  val = ((A/(r-g)) * (1 - ((1+g)/(1+r))**t))
+  if y:
+    val = PV(val, r, y-1)
+  return(val)
