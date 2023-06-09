@@ -56,3 +56,10 @@ SPLUNK: SWAPFAIL 0
 $ cat /tmp/SPLUNK.out # The single key-value pair for monitoring
 FAILURE_REASONS 0
 ```
+## twistlock.r
+Twistlock Report generator
+
+Usage:
+./twistlock.r mytwistlockoutput.csv [ myignorefile.csv ]
+
+Output will be an Excel spreadsheet named for your CSV input, such as `mytwistlockoutput.xlsx`.
